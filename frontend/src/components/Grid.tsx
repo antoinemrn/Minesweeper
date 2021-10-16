@@ -8,9 +8,10 @@ interface GridProps {
   height: number;
   grid: Array<Array<CellModel>>;
   handleCellClick(x: number, y: number): void;
+  handleFlagClick(isFlag : boolean): void;
 }
 
-const Grid = ({ width, height, grid, handleCellClick }: GridProps) => {
+const Grid = ({ width, height, grid, handleCellClick, handleFlagClick}: GridProps) => {
   return (
     <Container width={width} height={height}>
       {grid.map((row, x) =>
@@ -24,6 +25,7 @@ const Grid = ({ width, height, grid, handleCellClick }: GridProps) => {
               isBomb={c.isBomb}
               isVisible={c.isVisible}
               handleClick={handleCellClick}
+              handleFlagClick={handleFlagClick}
             />
           );
         })
@@ -34,8 +36,6 @@ const Grid = ({ width, height, grid, handleCellClick }: GridProps) => {
 
 const Container = styled.div<Partial<GridProps>>`
   display: grid;
-  margin: auto;
-  width: 40%;
   grid-template-columns: ${(props: Partial<GridProps>) =>
     `repeat(${props.width}, 1fr)`};
   grid-template-rows: ${(props: Partial<GridProps>) =>

@@ -4,11 +4,13 @@ import styled from "styled-components";
 import Grid from "./components/Grid";
 import GameModel from "./models/GameModel";
 import GlobalStyle from "./globalStyles";
+import Stats from "./components/Stats";
 
 const App = () => {
   const width = 20;
   const height = 20;
-  const nbBombs = 70;
+  const defaultBomb = 60;
+  const [remainingBombs, setRemainingBombs] = useState(70);
   const [game, setGame] = useState<GameModel>();
 
   const handleCellClick = async (x: number, y: number) => {
@@ -19,10 +21,15 @@ const App = () => {
     setGame(response.data);
   };
 
+  const handleFlag = (isFlag : boolean) => {
+    const newVal = isFlag ? remainingBombs -1 : remainingBombs+1;
+    setRemainingBombs(newVal);
+  };
+
   useEffect(() => {
     const newGame = async () => {
       const response = await axios.get<GameModel>(
-        `http://localhost:3001/game/grid?w=${width}&h=${height}&b=${nbBombs}`
+        `http://localhost:3001/game/grid?w=${width}&h=${height}&b=${defaultBomb}`
       );
       setGame(response.data);
     };
@@ -34,14 +41,16 @@ const App = () => {
       <GlobalStyle />
       <Title>MineSweeper</Title>
       {game && (
-        <div>
+        <Container>
+          <Stats remainingBombs={remainingBombs} />
           <Grid
             width={width}
             height={height}
             grid={game.grid}
             handleCellClick={handleCellClick}
+            handleFlagClick={handleFlag}
           />
-        </div>
+        </Container>
       )}
       {game?.win && (
         <Overlay>
@@ -56,7 +65,10 @@ const App = () => {
     </div>
   );
 };
-
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 50% 1fr;
+`;
 const Title = styled.div`
   text-align: center;
   font-size: 3.5em;

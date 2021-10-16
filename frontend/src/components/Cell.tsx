@@ -11,15 +11,17 @@ interface CellProps {
   isBomb: boolean;
   isVisible: boolean;
   handleClick(x: number, y: number): void;
+  handleFlagClick(isFlag : boolean): void;
 }
 
-const Cell = ({ x, y, isBomb, isVisible, value, handleClick }: CellProps) => {
+const Cell = ({ x, y, isBomb, isVisible, value, handleClick, handleFlagClick }: CellProps) => {
   const [isFlag, setIsFlag] = useState(false);
   const clicked = () => {
     handleClick(x, y);
   };
   const flag = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    handleFlagClick(!isFlag);
     setIsFlag(!isFlag);
   };
   return (
